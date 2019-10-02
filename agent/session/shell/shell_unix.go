@@ -86,6 +86,12 @@ func StartPty(
 				return nil, nil, errors.New("please set the RunAs default user")
 			}
 
+			if strings.TrimSpace(config.RunAsUser) == "ssm-user" {
+				// Start as ssm-user
+				// Create ssm-user before starting a session.
+				u.CreateLocalAdminUser(log)
+			}
+
 			// Check if user exists
 			if userExists, _ := u.DoesUserExist(config.RunAsUser); !userExists {
 				// if user does not exist, fail the session
